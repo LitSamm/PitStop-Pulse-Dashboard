@@ -150,12 +150,3 @@ useEffect(() => {
 
 ---
 
-## 👤 Author & Tim
-
-- **Developer / Maintainer**: [LitSamm](https://github.com/LitSamm) (masesam0809@gmail.com)
-- **Team**: **Anargya ITS Formula EV Team** (Institut Teknologi Sepuluh Nopember, Surabaya, Indonesia)
-- **Website**: [anargyaits.com](https://www.anargyaits.com/)
-
----
-
-© 2026 Anargya ITS Formula EV Team. All rights reserved.
