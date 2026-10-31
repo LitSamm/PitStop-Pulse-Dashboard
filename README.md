@@ -1,4 +1,4 @@
-# 🏎️ PitStop Pulse: Live Telemetry & Strategy Dashboard
+# PitStop Pulse: Live Telemetry & Strategy Dashboard
 ### Anargya ITS Formula EV Team — Surabaya, Indonesia
 
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?logo=next.js&style=flat-square)](https://nextjs.org/)
@@ -12,7 +12,7 @@ Aplikasi ini menyajikan visualisasi data telemetri komprehensif mulai dari pemet
 
 ---
 
-## ⚡ Fitur Utama (Key Features)
+## Fitur Utama (Key Features)
 
 ### 1. Tata Letak 3-Kolom Modern (Cockpit Layout)
 - **Kolom Kiri — Profil Pembalap & Lap Info**:
@@ -47,7 +47,7 @@ Aplikasi ini menyajikan visualisasi data telemetri komprehensif mulai dari pemet
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework**: [Next.js 14](https://nextjs.org/) (App Router, React 18, React Server Components)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
@@ -57,7 +57,7 @@ Aplikasi ini menyajikan visualisasi data telemetri komprehensif mulai dari pemet
 
 ---
 
-## 📂 Struktur Proyek
+## Struktur Proyek
 
 ```
 ├── app/
@@ -84,7 +84,7 @@ Aplikasi ini menyajikan visualisasi data telemetri komprehensif mulai dari pemet
 
 ---
 
-## 🚀 Memulai (Getting Started)
+## Memulai (Getting Started)
 
 ### Prasyarat
 - Node.js versi 18.17 atau lebih baru
@@ -119,7 +119,7 @@ npm run start
 
 ---
 
-## 🔌 Integrasi Supabase Realtime
+## Integrasi Supabase Realtime
 
 Komponen telemetri dibangun secara modular sehingga siap disambungkan langsung ke backend database **Supabase** atau websocket telemetri gokart. Di file `hooks/useTelemetry.ts`, Anda dapat mengaktifkan listener Supabase Channel:
 
