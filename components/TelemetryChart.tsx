@@ -25,7 +25,7 @@ export default function TelemetryChart({ data }: TelemetryChartProps) {
 
   if (!mounted) {
     return (
-      <div className="flex h-36 w-full items-center justify-center rounded-lg bg-zinc-950/60 font-mono text-xs text-zinc-500">
+      <div className="flex h-36 w-full items-center justify-center rounded-lg bg-zinc-950/60 text-xs text-zinc-500 font-medium">
         INITIALIZING TELEMETRY STREAM...
       </div>
     );
@@ -48,9 +48,10 @@ export default function TelemetryChart({ data }: TelemetryChartProps) {
             contentStyle={{
               backgroundColor: "#09090b",
               borderColor: "#27272a",
-              borderRadius: "6px",
-              fontFamily: "monospace",
-              fontSize: "11px",
+              borderRadius: "8px",
+              fontFamily: "inherit",
+              fontSize: "12px",
+              fontWeight: 600,
               boxShadow: "0 4px 20px rgba(0,0,0,0.8)",
             }}
             labelStyle={{ color: "#a1a1aa" }}

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PitStop Pulse: Live Telemetry & Strategy Dashboard",
+  title: "PitStop Pulse | Anargya ITS EV Team",
   description:
-    "Real-time electric gokart & racing car performance telemetry and pit strategy dashboard.",
+    "Live telemetry and race strategy dashboard for the Anargya ITS EV Team.",
 };
 
 export default function RootLayout({
@@ -13,11 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark bg-black">
-      <body className="min-h-screen bg-black text-zinc-100 antialiased selection:bg-cyan-500 selection:text-black">
+    <html lang="id">
+      <body className="min-h-screen antialiased">
         {children}
       </body>
     </html>
   );
 }
-

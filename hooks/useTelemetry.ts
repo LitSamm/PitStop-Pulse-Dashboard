@@ -7,7 +7,7 @@ const INITIAL_DRIVER_STATE: DriverState = {
   id: "DRV-01",
   name: "ALEXANDER RIVERA",
   number: "01",
-  team: "PULSE RACING EV WORKS",
+  team: "ITS ELEKTRO EV WORKS",
   position: "P1",
   gapToLeader: "LEADER",
   interval: "+1.842s (vs P2)",
@@ -114,40 +114,66 @@ export function useTelemetry(pollingIntervalMs: number = 200) {
     const telemetryInterval = setInterval(() => {
       const p = physicsRef.current;
 
-      // Realistic driving dynamics cycle: straights -> heavy braking -> cornering -> exit throttle
-      p.progress = (p.progress + 0.006) % 1; // loop around circuit
+      // Realistic driving dynamics cycle tailored for the ITS Circuit:
+      // - 0.00 - 0.12: Carousel Roundabout (medium speed 60-75 km/h, steady cornering)
+      // - 0.12 - 0.23: Downhill Chute & Paddock Sweeper (accel to 95 km/h, then heavy braking)
+      // - 0.23 - 0.35: Infield Hairpin (hard braking to 42 km/h, apex rotation)
+      // - 0.35 - 0.65: Infield Switchbacks (rapid slalom cornering, 50-70 km/h)
+      // - 0.65 - 0.72: South Sweeper exit (progressive throttle application)
+      // - 0.72 - 0.99: Long Back Straight (100% full throttle, speed climbing to 148 km/h, DRS enabled)
 
-      // Identify track section based on progress
+      p.progress = (p.progress + 0.005) % 1; // loop around circuit
+
       const isBrakingZone =
-        (p.progress > 0.22 && p.progress < 0.26) ||
-        (p.progress > 0.58 && p.progress < 0.63) ||
-        (p.progress > 0.88 && p.progress < 0.92);
+        (p.progress > 0.20 && p.progress < 0.25) || // Braking for T5 Infield Hairpin
+        (p.progress > 0.62 && p.progress < 0.66) || // Braking for T8 South Sweeper
+        (p.progress > 0.96 && p.progress < 0.99);   // Braking for T1 Carousel
 
-      const isCornerApex =
-        (p.progress >= 0.26 && p.progress < 0.35) ||
-        (p.progress >= 0.63 && p.progress < 0.72) ||
-        (p.progress >= 0.92 && p.progress < 0.98);
+      const isTightCornerApex =
+        (p.progress >= 0.25 && p.progress < 0.35) || // T5 Infield Hairpin
+        (p.progress >= 0.45 && p.progress < 0.55) || // T6-T7 Switchbacks
+        (p.progress >= 0.66 && p.progress < 0.72);   // T8 South Loop Apex
+
+      const isCarousel = p.progress >= 0.00 && p.progress < 0.12;
+      const isMainStraight = p.progress >= 0.72 && p.progress < 0.96;
 
       let nextThrottle = 0;
       let nextBrake = 0;
       let targetSpeed = 125;
+      let steer = 0;
 
       if (isBrakingZone) {
-        nextBrake = Math.min(100, Math.floor(75 + Math.random() * 25));
+        nextBrake = Math.min(100, Math.floor(80 + Math.random() * 20));
         nextThrottle = 0;
-        targetSpeed = 48 + Math.random() * 10;
-        p.speed = Math.max(targetSpeed, p.speed - 12);
-      } else if (isCornerApex) {
+        targetSpeed = 42 + Math.random() * 8;
+        p.speed = Math.max(targetSpeed, p.speed - 15);
+        steer = Math.round((Math.random() - 0.5) * 8);
+      } else if (isTightCornerApex) {
         nextBrake = 0;
-        nextThrottle = Math.floor(35 + Math.random() * 25);
-        targetSpeed = 65 + Math.random() * 15;
+        nextThrottle = Math.floor(30 + Math.random() * 20);
+        targetSpeed = 52 + Math.random() * 10;
+        p.speed = p.speed * 0.92 + targetSpeed * 0.08;
+        steer = p.progress < 0.35 ? -34 : p.progress < 0.55 ? 28 : -30;
+      } else if (isCarousel) {
+        nextBrake = 0;
+        nextThrottle = Math.floor(55 + Math.random() * 15);
+        targetSpeed = 68 + Math.random() * 8;
         p.speed = p.speed * 0.95 + targetSpeed * 0.05;
-      } else {
-        // High speed straight / acceleration
+        steer = 22 + Math.round((Math.random() - 0.5) * 6);
+      } else if (isMainStraight) {
+        // Long Backstraight Full Throttle
         nextBrake = 0;
-        nextThrottle = Math.min(100, Math.floor(90 + Math.random() * 10));
-        targetSpeed = 142 + Math.random() * 8;
-        p.speed = Math.min(150, p.speed + 4.5);
+        nextThrottle = 100;
+        targetSpeed = 148;
+        p.speed = Math.min(148, p.speed + 6.0);
+        steer = Math.round((Math.random() - 0.5) * 3);
+      } else {
+        // Chutes & transition links
+        nextBrake = 0;
+        nextThrottle = Math.min(95, Math.floor(75 + Math.random() * 20));
+        targetSpeed = 95 + Math.random() * 10;
+        p.speed = p.speed * 0.94 + targetSpeed * 0.06;
+        steer = Math.round((Math.random() - 0.5) * 10);
       }
 
       p.throttle = nextThrottle;
@@ -155,7 +181,6 @@ export function useTelemetry(pollingIntervalMs: number = 200) {
 
       const roundedSpeed = Math.round(p.speed);
       const computedRpm = Math.round(3500 + (p.speed / 150) * 8200 + (Math.random() * 300 - 150));
-      const steer = isCornerApex ? (Math.random() > 0.5 ? 28 : -26) : Math.round((Math.random() - 0.5) * 6);
 
       setSpeed(roundedSpeed);
       setThrottle(nextThrottle);

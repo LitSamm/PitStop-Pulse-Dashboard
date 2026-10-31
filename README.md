@@ -1,88 +1,127 @@
-# PitStop Pulse: Live Telemetry & Strategy Dashboard
+# 🏎️ PitStop Pulse: Live Telemetry & Strategy Dashboard
+### Anargya ITS Formula EV Team — Surabaya, Indonesia
 
-Sebuah antarmuka web dashboard satu halaman (*single-page telemetry dashboard*) berkecepatan tinggi bertema balap modern (*Dark Mode high-tech motorsport HUD*) untuk simulasi performa gokart listrik/F1 secara real-time.
+[![Next.js](https://img.shields.io/badge/Next.js-14.2-black?logo=next.js&style=flat-square)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript&style=flat-square)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?logo=tailwind-css&style=flat-square)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-MIT-emerald?style=flat-square)](LICENSE)
 
-Dibangun dengan **Next.js (App Router)**, **Tailwind CSS**, **Recharts**, dan **Lucide Icons**, dirancang modular agar mudah dihubungkan dengan backend **Supabase** atau external telemetry websocket/API.
+**PitStop Pulse** adalah antarmuka web satu halaman (*single-page live telemetry workstation*) berkinerja tinggi yang dirancang untuk memantau performa balap gokart listrik / Formula Student EV (*Electric Vehicle*) dari **Anargya ITS Formula EV Team** secara *real-time*.
+
+Aplikasi ini menyajikan visualisasi data telemetri komprehensif mulai dari pemetaan lintasan sirkuit dinamis, simulasi posisi mobil, status sistem tenaga EV, hingga algoritma rekomendasi strategi *pit stop* dengan estetika *dark mode* berteknologi tinggi khas paddock balap profesional.
 
 ---
 
-## 🏎️ Struktur Modular & Komponen
+## ⚡ Fitur Utama (Key Features)
+
+### 1. Tata Letak 3-Kolom Modern (Cockpit Layout)
+- **Kolom Kiri — Profil Pembalap & Lap Info**:
+  - Avatar pembalap dengan helm balap transparan dan badge posisi langsung (`P1`, start dari P3).
+  - Tampilan waktu lap (*Live Ticking Lap Timer*) dengan format presisi hingga milidetik (`01:14.382`).
+  - Analisis delta benchmark lap (*Best Lap Purple*, *Last Lap Delta*, dan *Sector Time Status* SEC 1-3).
+  - Sistem tenaga EV (*Battery SoC progress bar*, cooling loop camera, suhu baterai 42°C, dan output motor kW).
+- **Kolom Tengah — Peta Sirkuit ITS Surabaya (Fokus Visual Utama)**:
+  - Siluet sirkuit berbasis data aerial drone Sirkuit Gokart ITS Surabaya.
+  - Garis lintasan beriluminasi neon cyan–emerald (`#00f0ff` ke `#00ff66`) dengan filter glow dinamis.
+  - Penanda mobil (*Top-Down Kart Marker*) dengan radar target animasi yang melacak lintasan secara presisi.
+  - Titik referensi belokan (*T1 Carousel*, *T3 Paddock*, *T5 Infield*, *T8 South Loop*, *DRS Zone*, dan *Speed Trap* 148 km/h).
+  - Track HUD telemetry bar (kecepatan langsung, progress lap, lateral G-Force, status DRS).
+- **Kolom Kanan — Live Telemetry Gauges & Pit Strategy**:
+  - Tiga indikator progress bar horizontal berfrekuensi 10Hz untuk Kecepatan (`SPEED [KM/H]`), Gas (`THROTTLE [GAS]`), dan Rem (`BRAKE [REM]`).
+  - Oscilloskop telemetri langsung (*Real-Time Oscilloscope*) berbasis Recharts.
+  - Monitor putaran motor (*Motor RPM*) dan sudut kemudi (*Steering Angle*) dengan onboard cockpit camera feed.
+  - Antarmuka rekomendasi strategi *pit stop* kru radio (Target Undercut Delta +2.4s).
+  - Kompon ban F1/Pirelli (*Soft*, *Medium*, *Hard*) dengan metrik spesifik:
+    - **`Tire Wear: 65%`**
+    - **`Optimal Pit Window: Lap 15`**
+  - Diagram *thermal heatmap* 4 roda (FL, FR, RL, RR) dengan temperatur real-time dan tekanan PSI.
+
+### 2. Tipografi Humanis & Non-Robotik
+- Menggunakan tipografi modern **Plus Jakarta Sans** untuk antarmuka yang proporsional, tajam, dan elegan.
+- Menghilangkan kesan kaku (*typewriter/terminal hacker*) dan hanya menggunakan monospaced `tabular-nums` khusus pada digit stopwatch berkecepatan tinggi agar tidak terjadi pergeseran tata letak (*zero jitter / no layout shift*).
+
+### 3. Tekstur & Hardware Styling
+- Latar belakang global hitam pekat (`bg-black`) dengan footage ambient sirkuit/garage berefek blur tebal (`blur-3xl`, opacity 15%).
+- Kartu metrik `bg-zinc-900/95` dengan border tipis transparan dan overlay mikro serat karbon (*Carbon Fiber Texture*).
+- Brandmark resmi **Anargya ITS Formula EV Team** pada navbar dan lambang helix pada footer.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 14](https://nextjs.org/) (App Router, React 18, React Server Components)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS 3.4](https://tailwindcss.com/)
+- **Visualisasi Grafik**: [Recharts](https://recharts.org/) (Client-side dynamic render)
+- **Desain & Aset**: Brandmark Anargya ITS, aset footage tim, SVG sirkuit kustom, CSS gradient/filter glow.
+
+---
+
+## 📂 Struktur Proyek
 
 ```
 ├── app/
-│   ├── globals.css              # Global dark mode, scrollbar, glow utility & styles
-│   ├── layout.tsx               # Next.js Root Layout & metadata
-│   └── page.tsx                 # Halaman utama (Grid 3-Kolom & Ambient Garage Background)
+│   ├── globals.css              # Dark theme, motorsport scrollbar, glowing filters
+│   ├── layout.tsx               # Root layout & metadata
+│   └── page.tsx                 # Dashboard utama (3-column layout)
 ├── components/
-│   ├── Header.tsx               # Status bar, sync indicator, weather & track info
-│   ├── DriverProfile.tsx        # Kolom Kiri: Avatar, nama, P1, ticking lap timer, EV SoC
-│   ├── TrackMap.tsx             # Kolom Tengah: Siluet sirkuit neon, animasi live kart marker
-│   ├── TelemetryPanel.tsx       # Kolom Kanan: Progress bar Speed, Throttle, Brake & Oscilloscope
-│   ├── TelemetryChart.tsx       # Real-time Recharts line chart (Speed, Throttle, Brake)
-│   ├── StrategyPanel.tsx        # Kolom Kanan: Rekomendasi Pit, status ban, wear 65%, optimal lap 15
-│   └── CarbonFiberTexture.tsx   # Tekstur hardware serat karbon procedural & image slot
+│   ├── Header.tsx               # Anargya ITS navbar brand & telemetry status
+│   ├── DriverProfile.tsx        # Profil driver, lap stopwatch, EV powertrain status
+│   ├── TrackMap.tsx             # Peta sirkuit ITS Surabaya & marker mobil dinamis
+│   ├── TelemetryPanel.tsx       # Gauges kecepatan, gas, rem, RPM & Recharts oscilloscope
+│   ├── TelemetryChart.tsx       # Recharts real-time multi-line oscilloscope
+│   ├── StrategyPanel.tsx        # Rekomendasi pit stop, ban, dan heatmap 4 roda
+│   └── CarbonFiberTexture.tsx   # Tekstur karbon prosedural
 ├── hooks/
-│   └── useTelemetry.ts          # State simulation (100-500ms) & Supabase realtime hook template
+│   └── useTelemetry.ts          # State simulasi telemetri (10Hz) & Supabase channel template
+├── public/
+│   └── images/                  # Aset foto tim balap, sirkuit, avatar & logo Anargya
 ├── types/
-│   └── telemetry.ts             # TypeScript definitions untuk telemetri & strategi ban
+│   └── telemetry.ts             # Interface TypeScript untuk telemetri & strategi
+├── tailwind.config.ts           # Konfigurasi Tailwind & palet neon racing
 └── package.json
 ```
 
 ---
 
-## 🎨 Penempatan Asset (Asset Placement Guide)
+## 🚀 Memulai (Getting Started)
 
-Setiap placeholder aset visual telah disiapkan dengan tanda komentar yang jelas di dalam kode komponen:
+### Prasyarat
+- Node.js versi 18.17 atau lebih baru
+- npm / pnpm / yarn
 
-1. **Ambient Pit Garage Background**
-   - **File**: `app/page.tsx`
-   - **Slot**: `[Image: Blurred Pit Garage WebP/JPG]` pada div layar penuh ber-`backdrop-blur-xl` di layer terbawah (`-z-10`).
-   - Tersedia fallback pencahayaan ambient motorsport neon cyan & amber.
-
-2. **Seamless Carbon Fiber Texture**
-   - **File**: `components/CarbonFiberTexture.tsx`
-   - **Slot**: `[Image: Seamless Carbon Fiber Texture JPG]` dengan opacity 5-10%.
-   - Dilengkapi fallback procedural CSS weave pattern sehingga langsung tampak bertekstur hardware balap.
-
-3. **Driver Helmet / Profile Image**
-   - **File**: `components/DriverProfile.tsx`
-   - **Slot**: `[Image: Driver Helmet/Profile Transparent PNG]` di dalam lingkaran avatar `group`.
-   - Tersedia fallback vector SVG helm balap futuristik dengan visor glow.
-
-4. **Siluet Sirkuit & Top-Down Kart Marker**
-   - **File**: `components/TrackMap.tsx`
-   - **Slot 1**: `[SVG: Siluet Sirkuit / Track Map]` dengan garis neon glow filter (cyan/emerald).
-   - **Slot 2**: `[Image: Top-Down Kart/Car Transparent PNG]` pada marker dinamis yang bergerak mengelilingi path sirkuit.
-
-5. **Ikon Telemetri Dasar (Pedal & Setir)**
-   - **File**: `components/TelemetryPanel.tsx`
-   - **Slot**: `[SVG: Ikon Telemetri Dasar]` di samping label Speed (steering wheel), Throttle (pedal gas), dan Brake (pedal rem).
-
-6. **Ikon Kompon Ban (Pirelli / F1 Circles)**
-   - **File**: `components/StrategyPanel.tsx`
-   - **Slot**: `[SVG: Ikon Kompon Ban]` lingkaran border merah (`Soft - S`), kuning (`Medium - M`), putih (`Hard - H`), hijau (`Inter - I`), biru (`Wet - W`).
-
----
-
-## ⚡ Menjalankan Proyek
+### Instalasi & Menjalankan Lokal
 
 ```bash
-# 1. Jalankan development server
+# 1. Clone repositori
+git clone https://github.com/LitSamm/PitStop-Pulse-Dashboard.git
+cd PitStop-Pulse-Dashboard
+
+# 2. Pasang dependensi
+npm install
+
+# 3. Jalankan server pengembangan
 npm run dev
 
-# 2. Buka di browser
-http://localhost:3000
+# 4. Buka di browser
+# Akses http://localhost:3000
+```
 
-# 3. Production build (sudah teruji sukses)
+### Build Produksi
+
+```bash
+# Buat build produksi yang dioptimalkan
 npm run build
+
+# Jalankan server produksi
 npm run start
 ```
 
 ---
 
-## 🔌 Menghubungkan ke Supabase Realtime
+## 🔌 Integrasi Supabase Realtime
 
-Di dalam file `hooks/useTelemetry.ts`, Anda dapat mengganti simulator `setInterval` dengan Supabase Realtime Channel:
+Komponen telemetri dibangun secara modular sehingga siap disambungkan langsung ke backend database **Supabase** atau websocket telemetri gokart. Di file `hooks/useTelemetry.ts`, Anda dapat mengaktifkan listener Supabase Channel:
 
 ```typescript
 import { createClient } from "@supabase/supabase-js";
@@ -100,7 +139,6 @@ useEffect(() => {
       setThrottle(payload.throttle);
       setBrake(payload.brake);
       setRpm(payload.rpm);
-      setTrackProgress(payload.trackProgress);
     })
     .subscribe();
 
@@ -110,3 +148,14 @@ useEffect(() => {
 }, []);
 ```
 
+---
+
+## 👤 Author & Tim
+
+- **Developer / Maintainer**: [LitSamm](https://github.com/LitSamm) (masesam0809@gmail.com)
+- **Team**: **Anargya ITS Formula EV Team** (Institut Teknologi Sepuluh Nopember, Surabaya, Indonesia)
+- **Website**: [anargyaits.com](https://www.anargyaits.com/)
+
+---
+
+© 2026 Anargya ITS Formula EV Team. All rights reserved.
